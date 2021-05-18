@@ -1,0 +1,173 @@
+{
+    "BigQuery Schema": [
+      {
+         
+  "$schema": "http://json-schema.org/draft-04/schema#",
+  "type": "object",
+  "properties": {
+    "date": {
+      "type": "string"
+    },
+    "@timestamp": {
+      "type": "string"
+    },
+    "host": {
+      "type": "string"
+    },
+    "message": {
+      "type": "string"
+    },
+    "client_ip": {
+      "type": "string"
+    },
+    "user_agent": {
+      "type": "string"
+    },
+    "response": {
+      "type": "string"
+    },
+    "geoip": {
+      "type": "object",
+      "properties": {
+        "longitude": {
+          "type": "number"
+        },
+        "country_code3": {
+          "type": "string"
+        },
+        "ip": {
+          "type": "string"
+        },
+        "timezone": {
+          "type": "string"
+        },
+        "country_code2": {
+          "type": "string"
+        },
+        "country_name": {
+          "type": "string"
+        },
+        "location": {
+          "type": "object",
+          "properties": {
+            "lat": {
+              "type": "number"
+            },
+            "lon": {
+              "type": "number"
+            }
+          },
+          "required": [
+            "lat",
+            "lon"
+          ]
+        },
+        "latitude": {
+          "type": "number"
+        },
+        "continent_code": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "longitude",
+        "country_code3",
+        "ip",
+        "timezone",
+        "country_code2",
+        "country_name",
+        "location",
+        "latitude",
+        "continent_code"
+      ]
+    },
+    "server_ip": {
+      "type": "string"
+    },
+    "path": {
+      "type": "string"
+    },
+    "client": {
+      "type": "object",
+      "properties": {
+        "user_agent": {
+          "type": "object",
+          "properties": {
+            "major": {
+              "type": "string"
+            },
+            "build": {
+              "type": "string"
+            },
+            "os": {
+              "type": "string"
+            },
+            "name": {
+              "type": "string"
+            },
+            "os_name": {
+              "type": "string"
+            },
+            "device": {
+              "type": "string"
+            },
+            "minor": {
+              "type": "string"
+            }
+          },
+          "required": [
+            "major",
+            "build",
+            "os",
+            "name",
+            "os_name",
+            "device",
+            "minor"
+          ]
+        }
+      },
+      "required": [
+        "user_agent"
+      ]
+    },
+    "Product_Num": {
+      "type": "string"
+    },
+    "http_url": {
+      "type": "string"
+    },
+    "@version": {
+      "type": "string"
+    },
+    "user-group": {
+      "type": "string"
+    },
+    "user_id": {
+      "type": "string"
+    },
+    "http_method": {
+      "type": "string"
+    }
+  },
+  "required": [
+    "date",
+    "@timestamp",
+    "host",
+    "message",
+    "client_ip",
+    "user_agent",
+    "response",
+    "geoip",
+    "server_ip",
+    "path",
+    "client",
+    "Product_Num",
+    "http_url",
+    "@version",
+    "user-group",
+    "user_id",
+    "http_method"
+  ]
+}
+    ]
+}

@@ -1,0 +1,91 @@
+version: "2"
+
+volumes:
+  es_data:
+    driver: local
+
+services:
+    app:
+        image: ebuildy/vignestore:latest
+        #build: .
+        environment:
+            DATABASE_URL: "mysql://root:root@mysql:3306/vignestore?serverVersion=5.7"
+            BUSINESS_LOGGER_URL: http://logstash_bus_log:8081/
+    mysql:
+        image: mysql:5.7
+        environment:
+            MYSQL_ROOT_PASSWORD: root
+            MYSQL_DATABASE: vignestore
+        ports:
+            - 3303:3306
+
+    phpmyadmin:
+        image: phpmyadmin/phpmyadmin
+        environment:
+            PMA_HOSTS: mysql
+        ports:
+            - 8082:80
+
+    elasticsearch:
+        image: docker.elastic.co/elasticsearch/elasticsearch:7.12.0
+        environment:
+        - discovery.type=single-node
+        - "ES_JAVA_OPTS=-Xms512m -Xmx512m"
+        #- xpack.security.enabled=false
+        - xpack.ml.enabled=false
+        #- xpack.monitoring.enabled=false
+        #- xpack.graph.enabled=false
+        #- xpack.watcher.enabled=false
+        #- MONITORING_ENABLED=false
+        labels:
+            co.elastic.logs/module: elasticsearch
+        ports:
+            - 9200:9200
+
+    kibana:
+        image: docker.elastic.co/kibana/kibana:7.12.0
+        environment:
+        - ELASTICSEARCH_HOSTS=http://elasticsearch:9200
+        #- MONITORING_ENABLED=false
+        #- XPACK_SPACES_ENABLED=false
+        - XPACK_ML_ENABLED=false
+        - XPACK_APM_ENABLED=false
+        #- XPACK_GRAPH_ENABLED=false
+        #- TELEMETRY_ENABLED=false
+        labels:
+            co.elastic.logs/module: kibana
+        ports:
+            - 8083:5601
+
+    logstash_log:
+        #image: docker.elastic.co/logstash/logstash:7.12.0
+        build: ./logstash
+        environment:
+            - MONITORING_ENABLED=false
+        volumes:
+            - ./pipeline_log.conf:/usr/share/logstash/pipeline/logstash.conf
+            - .:/my_data
+            - ./key.json:/key.json
+
+
+    logstash_bus_log:
+        #image: docker.elastic.co/logstash/logstash:7.12.0
+        #command: "--config.reload.automatic --log.level=debug"
+        command: "--config.reload.automatic"
+        build: ./logstash
+        environment:
+            - MONITORING_ENABLED=false
+            - ELASTICSEARCH_HOSTS=http://elasticsearch:9200
+        volumes:
+            - ./pipeline_bus_log.conf:/usr/share/logstash/pipeline/logstash.conf
+            - ./key.json:/key.json
+    zep:
+        build: ./notebook
+        image : apache/zeppelin:0.9.0
+        environment : 
+        - ZEPPELIN_NOTEBOOK_DIR='/notebook'
+        ports:
+        - 8086:8080
+        volumes:
+        - ./notebook:/notebook
+                
